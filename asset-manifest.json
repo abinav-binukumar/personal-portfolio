@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/Portfolio/static/css/main.33379e39.css",
+    "main.js": "/Portfolio/static/js/main.74441fd5.js",
+    "static/js/453.d87ebb6f.chunk.js": "/Portfolio/static/js/453.d87ebb6f.chunk.js",
+    "static/media/LightUp.gif": "/Portfolio/static/media/LightUp.53f079f4a0e7276a114d.gif",
+    "static/media/PokePC.gif": "/Portfolio/static/media/PokePC.0e1b9e00f819bd234496.gif",
+    "static/media/PlateProcessor.gif": "/Portfolio/static/media/PlateProcessor.bbfe0922a5a4f73fe9e2.gif",
+    "static/media/Portfolio.gif": "/Portfolio/static/media/Portfolio.4cba948cb333e6158e2c.gif",
+    "static/media/PongGame.gif": "/Portfolio/static/media/PongGame.dd91cb02e89ca884ac9c.gif",
+    "static/media/InvestSmart.gif": "/Portfolio/static/media/InvestSmart.6d622b5ac8cbeacb2a9f.gif",
+    "static/media/Abinav.webp": "/Portfolio/static/media/Abinav.a7c9b57858b45b43fb20.webp",
+    "static/media/spaceship.webp": "/Portfolio/static/media/spaceship.e0a2165566c8308d7e21.webp",
+    "index.html": "/Portfolio/index.html",
+    "main.33379e39.css.map": "/Portfolio/static/css/main.33379e39.css.map",
+    "main.74441fd5.js.map": "/Portfolio/static/js/main.74441fd5.js.map",
+    "453.d87ebb6f.chunk.js.map": "/Portfolio/static/js/453.d87ebb6f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.33379e39.css",
+    "static/js/main.74441fd5.js"
+  ]
+}
