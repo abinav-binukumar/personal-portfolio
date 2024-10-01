@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/personal-portfolio/static/css/main.4e0794b5.css",
-    "main.js": "/personal-portfolio/static/js/main.c091ce90.js",
-    "static/js/453.d87ebb6f.chunk.js": "/personal-portfolio/static/js/453.d87ebb6f.chunk.js",
-    "static/media/LightUp.gif": "/personal-portfolio/static/media/LightUp.53f079f4a0e7276a114d.gif",
-    "static/media/PlateProcessor.gif": "/personal-portfolio/static/media/PlateProcessor.bbfe0922a5a4f73fe9e2.gif",
-    "static/media/Portfolio.gif": "/personal-portfolio/static/media/Portfolio.4cba948cb333e6158e2c.gif",
-    "static/media/InvestSmart.gif": "/personal-portfolio/static/media/InvestSmart.dca8aa77f2351f5dfa10.gif",
-    "static/media/PongGame.gif": "/personal-portfolio/static/media/PongGame.dd91cb02e89ca884ac9c.gif",
-    "static/media/Abinav.webp": "/personal-portfolio/static/media/Abinav.a7c9b57858b45b43fb20.webp",
-    "static/media/spaceship.webp": "/personal-portfolio/static/media/spaceship.e0a2165566c8308d7e21.webp",
-    "index.html": "/personal-portfolio/index.html",
-    "main.4e0794b5.css.map": "/personal-portfolio/static/css/main.4e0794b5.css.map",
-    "main.c091ce90.js.map": "/personal-portfolio/static/js/main.c091ce90.js.map",
-    "453.d87ebb6f.chunk.js.map": "/personal-portfolio/static/js/453.d87ebb6f.chunk.js.map"
+    "main.css": "/static/css/main.4e0794b5.css",
+    "main.js": "/static/js/main.f2a37da8.js",
+    "static/js/453.d87ebb6f.chunk.js": "/static/js/453.d87ebb6f.chunk.js",
+    "static/media/LightUp.gif": "/static/media/LightUp.53f079f4a0e7276a114d.gif",
+    "static/media/PlateProcessor.gif": "/static/media/PlateProcessor.bbfe0922a5a4f73fe9e2.gif",
+    "static/media/Portfolio.gif": "/static/media/Portfolio.4cba948cb333e6158e2c.gif",
+    "static/media/InvestSmart.gif": "/static/media/InvestSmart.dca8aa77f2351f5dfa10.gif",
+    "static/media/PongGame.gif": "/static/media/PongGame.dd91cb02e89ca884ac9c.gif",
+    "static/media/Abinav.webp": "/static/media/Abinav.a7c9b57858b45b43fb20.webp",
+    "static/media/spaceship.webp": "/static/media/spaceship.e0a2165566c8308d7e21.webp",
+    "index.html": "/index.html",
+    "main.4e0794b5.css.map": "/static/css/main.4e0794b5.css.map",
+    "main.f2a37da8.js.map": "/static/js/main.f2a37da8.js.map",
+    "453.d87ebb6f.chunk.js.map": "/static/js/453.d87ebb6f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4e0794b5.css",
-    "static/js/main.c091ce90.js"
+    "static/js/main.f2a37da8.js"
   ]
 }
