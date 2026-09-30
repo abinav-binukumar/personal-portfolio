@@ -13,7 +13,7 @@ const About: React.FC = () => {
             Hello! My name is <span className="purple-text">Abinav Binukumar</span>, a
             software engineer finishing my final year at <span className="purple-text">Ontario Tech University</span>,
             graduating <span className="purple-text">May 2027</span>. I'm happiest when a system that used to be held
-            together with duct tape isn't anymore - I like taking something fragile and manual and turning it into
+            together with duct tape isn't anymore. I like taking something fragile and manual and turning it into
             something people can actually rely on, whether that's a scrappy startup's whole platform or a piece of
             enterprise infrastructure nobody wants to touch.
           </p>
