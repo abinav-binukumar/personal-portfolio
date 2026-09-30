@@ -21,7 +21,11 @@ import { pixel } from './styles/retro';
 const AppContainer = styled.div`
   background-color: ${pixel.bg}; /* Match the background color of the hero section */
   min-height: 100vh;
-  padding: 20px 0;
+  padding-bottom: 20px;
+  /* No top padding: Header is position:sticky/top:0, so any padding here
+     would leave a gap of this near-black background exposed above it at
+     the very top of the page, with no border to explain it - reads as a
+     rendering glitch rather than intentional spacing. */
 `;
 
 const MainContent = styled.div`

@@ -667,9 +667,12 @@ const HeroGame: React.FC<HeroGameProps> = ({ active = true, onExit }) => {
       });
     } else {
       const count = Math.min(Math.max(letters.length, 4), 10);
-      letterQueueRef.current = Array.from({ length: count }, (_, i) => letters[i % letters.length] ?? '*');
-      ammoRef.current = count;
-      setAmmo(count);
+      // A couple of spare shots so a missed asteroid or two isn't an instant
+      // "out of ammo" game over on the first two (non-boss) levels.
+      const ammoAmount = count + 2;
+      letterQueueRef.current = Array.from({ length: ammoAmount }, (_, i) => letters[i % letters.length] ?? '*');
+      ammoRef.current = ammoAmount;
+      setAmmo(ammoAmount);
       requiredRef.current = count;
       setRequired(count);
       destroyedRef.current = 0;
@@ -1226,6 +1229,11 @@ const HeroGame: React.FC<HeroGameProps> = ({ active = true, onExit }) => {
           <OverlaySub style={{ fontSize: '0.8em', color: '#8c877d' }}>
             Move: arrow keys / WASD (or the pad below on mobile) - Fire: space / tap FIRE
           </OverlaySub>
+          {level === 'firstName' && (
+            <OverlaySub style={{ fontSize: '0.75em', color: '#8c877d', marginTop: 4 }}>
+              Rules: shoot the asteroids before they pass - 3 hits or 3 misses and it's game over. SKIP GAME works anytime.
+            </OverlaySub>
+          )}
         </CenterOverlay>
       )}
 
@@ -1281,12 +1289,12 @@ const HeroGame: React.FC<HeroGameProps> = ({ active = true, onExit }) => {
       {active && phase === 'playing' && (
         <>
           <TouchControls>
-            <DPadButton $col={2} $row={1} onPointerDown={pressDir('up', true)} onPointerUp={pressDir('up', false)} onPointerLeave={pressDir('up', false)}>^</DPadButton>
-            <DPadButton $col={1} $row={2} onPointerDown={pressDir('left', true)} onPointerUp={pressDir('left', false)} onPointerLeave={pressDir('left', false)}>{'<'}</DPadButton>
-            <DPadButton $col={3} $row={2} onPointerDown={pressDir('right', true)} onPointerUp={pressDir('right', false)} onPointerLeave={pressDir('right', false)}>{'>'}</DPadButton>
-            <DPadButton $col={2} $row={2} onPointerDown={pressDir('down', true)} onPointerUp={pressDir('down', false)} onPointerLeave={pressDir('down', false)}>v</DPadButton>
+            <DPadButton $col={2} $row={1} onPointerDown={pressDir('up', true)} onPointerUp={pressDir('up', false)} onPointerLeave={pressDir('up', false)} onPointerCancel={pressDir('up', false)}>^</DPadButton>
+            <DPadButton $col={1} $row={2} onPointerDown={pressDir('left', true)} onPointerUp={pressDir('left', false)} onPointerLeave={pressDir('left', false)} onPointerCancel={pressDir('left', false)}>{'<'}</DPadButton>
+            <DPadButton $col={3} $row={2} onPointerDown={pressDir('right', true)} onPointerUp={pressDir('right', false)} onPointerLeave={pressDir('right', false)} onPointerCancel={pressDir('right', false)}>{'>'}</DPadButton>
+            <DPadButton $col={2} $row={2} onPointerDown={pressDir('down', true)} onPointerUp={pressDir('down', false)} onPointerLeave={pressDir('down', false)} onPointerCancel={pressDir('down', false)}>v</DPadButton>
           </TouchControls>
-          <FireButtonTouch onPointerDown={pressFire(true)} onPointerUp={pressFire(false)} onPointerLeave={pressFire(false)}>
+          <FireButtonTouch onPointerDown={pressFire(true)} onPointerUp={pressFire(false)} onPointerLeave={pressFire(false)} onPointerCancel={pressFire(false)}>
             FIRE
           </FireButtonTouch>
         </>
