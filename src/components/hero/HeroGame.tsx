@@ -35,7 +35,7 @@ const EMAILJS_NOTIFY_TEMPLATE_ID = process.env.REACT_APP_EMAILJS_NOTIFY_TEMPLATE
 const EMAILJS_PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 const OWNER_EMAIL = process.env.REACT_APP_OWNER_EMAIL || 'abinav.binukumar@ontariotechu.net';
 
-const emailjsSend = async (templateId: string, templateParams: Record<string, string>): Promise<void> => {
+const emailjsSendOnce = async (templateId: string, templateParams: Record<string, string>): Promise<void> => {
   const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -49,6 +49,18 @@ const emailjsSend = async (templateId: string, templateParams: Record<string, st
 
   if (!res.ok) {
     throw new Error(`EmailJS request failed (${res.status}): ${await res.text()}`);
+  }
+};
+
+// EmailJS's Gmail provider occasionally throws a transient "Internal error
+// encountered" even when the service/template are fine - retry once after a
+// beat before giving up, rather than failing a visitor's message over a blip.
+const emailjsSend = async (templateId: string, templateParams: Record<string, string>): Promise<void> => {
+  try {
+    await emailjsSendOnce(templateId, templateParams);
+  } catch (err) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await emailjsSendOnce(templateId, templateParams);
   }
 };
 
