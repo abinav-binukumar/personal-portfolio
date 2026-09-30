@@ -1,28 +1,31 @@
-$purple: #9b59b6; // Original purple
-$darker-purple: #8e44ad; // Darker shade of purple for hover
+@import '../../styles/retro';
 
 .header-container {
-  background-color: #1e1e1e; /* Dark background for the header */
+  background-color: rgba(20, 16, 28, 0.9); /* Dark arcade background for the header */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   padding: 20px 40px; /* Spacing around the header content */
   display: flex;
   align-items: center; /* Vertically align items in the header */
   justify-content: space-between; /* Space items evenly (logo on the left, nav on the right) */
   color: #fff; /* White text color */
   font-family: 'RobotoMono', sans-serif;
-  position: relative; /* Set relative position for z-index control */
+  position: sticky; /* Stick to the top while scrolling */
+  top: 0;
   z-index: 1000; /* Ensure the header stays on top of other elements */
+  border-bottom: 3px solid $pixel-purple-dark;
 }
 
 .logo {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 24px; /* Size of the logo text */
-  font-weight: bold; /* Bold text for emphasis */
+  font-family: $font-pixel-display;
+  font-size: 18px; /* Size of the logo text */
   letter-spacing: 2px; /* Add space between the letters */
-  color: #e1e1e1; /* Light gray color for the logo */
+  color: $pixel-white; /* Light color for the logo */
   text-decoration: none; /* Remove underline from logo text */
+  transition: color 0.2s;
 
   &:hover {
-    color: $darker-purple; /* Darker purple on hover */
+    color: $pixel-cyan; /* Neon cyan on hover */
   }
 }
 
@@ -30,22 +33,43 @@ $darker-purple: #8e44ad; // Darker shade of purple for hover
   display: flex;
   align-items: center; /* Vertically align navigation links */
 
-  /* Mobile: Show the nav as a full-screen menu when open */
+  /* This renders via a React portal straight into <body> (see header.tsx) -
+     the header's own backdrop-filter creates a new containing block for any
+     `position: fixed` descendant, which traps a naively-nested full-screen
+     mobile nav inside the header's own tiny box instead of the viewport.
+     Portalling out fixes that, but it also means .nav is no longer a flex
+     child of .header-container - so unlike before, IT needs its own fixed
+     positioning on desktop too, to sit back in the header's visual slot. */
+  @media (min-width: 769px) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: var(--header-height, 84px);
+    padding-right: 40px; /* matches .header-container's own horizontal padding */
+    z-index: 1000; /* same layer as .header-container, so it paints over its blur */
+  }
+
+  /* Mobile: Show the nav as a full-screen menu when open.
+     Hidden via `transform` (not `right: -100%`) - a fixed element positioned
+     with `right` still gets counted toward the page's scrollable width in
+     some browsers, which was causing an unwanted horizontal scrollbar/overflow
+     even though it's visually offscreen. transform doesn't affect layout. */
   @media (max-width: 768px) {
     position: fixed; /* Fix the nav in place on small screens */
     top: 0;
-    right: -100%; /* Initially hide the nav by moving it offscreen */
+    right: 0;
     width: 100%; /* Full width for the mobile menu */
     height: 100%; /* Full height for the mobile menu */
-    background-color: #1e1e1e; /* Same dark background */
+    background-color: $pixel-bg; /* Same dark background */
     flex-direction: column; /* Stack the nav items vertically */
     justify-content: center; /* Center nav items vertically */
-    transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
+    transform: translateX(100%); /* Initially hide the nav by moving it offscreen */
+    transition: transform 0.3s ease-in-out; /* Smooth slide-in effect */
     z-index: 999; /* Layer it above other content */
   }
 
   &.open {
-    right: 0; /* Slide the nav into view when it's open */
+    transform: translateX(0); /* Slide the nav into view when it's open */
   }
 }
 
@@ -53,14 +77,14 @@ $darker-purple: #8e44ad; // Darker shade of purple for hover
   display: flex;
   align-items: center; /* Vertically align link content */
   margin-left: 40px; /* Add space between the links */
-  color: #d3d3d3; /* Light gray for the link text */
+  color: #8c877d; /* Light gray for the link text */
   text-decoration: none; /* Remove underline from links */
   font-size: 18px; /* Set the link text size */
-  transition: color 0.3s; /* Smooth color transition on hover */
+  transition: color 0.2s; /* Smooth color transition on hover */
   font-family: 'RobotoMono', sans-serif;
 
   &:hover {
-    color: $darker-purple; /* Darker purple on hover */
+    color: $pixel-cyan; /* Neon cyan on hover */
   }
 
   svg {
@@ -95,18 +119,14 @@ $darker-purple: #8e44ad; // Darker shade of purple for hover
   margin-left: 20px; /* Reduced margin for better alignment */
   padding: 8px 12px;
   padding-left: 7.5px; /* Adjusted padding to bring content closer to the border */
-  border: 2px solid $purple; /* Purple border around the button */
-  color: #d3d3d3; /* Light gray text */
+  background: $pixel-bg-card;
+  border: 2px solid $pixel-purple; /* Purple border around the button */
+  color: #8c877d; /* Light gray text */
   text-decoration: none; /* Remove underline from the button text */
   font-size: 18px; /* Set the button text size */
-  transition: all 0.3s; /* Smooth transition for background and text color */
   font-family: 'RobotoMono', sans-serif;
-  border-radius: 5px; /* Rounded button corners */
-
-  &:hover {
-    background-color: $darker-purple; /* Darker purple background on hover */
-    color: #fff; /* White text on hover */
-  }
+  @include pixel-corners(4px);
+  @include pixel-press($pixel-purple-dark, 4px);
 
   svg {
     margin-right: 8px; /* Space between the icon and text */
@@ -121,12 +141,11 @@ $darker-purple: #8e44ad; // Darker shade of purple for hover
 }
 
 .contact-link {
-  color: #d3d3d3; /* Same light gray color as other links */
+  color: $pixel-white; /* Same light color as other links */
   font-weight: bold; /* Make it bold for emphasis */
 
   &:hover {
-    background-color: $darker-purple; /* Change background to darker purple on hover */
-    color: #fff; /* Change text to white on hover */
+    color: $pixel-cyan; /* Neon cyan text on hover */
   }
 }
 
@@ -134,4 +153,3 @@ $darker-purple: #8e44ad; // Darker shade of purple for hover
   display: block; /* Show the close icon by default */
   z-index: 1002; /* Ensure the close icon is above the nav */
 }
-

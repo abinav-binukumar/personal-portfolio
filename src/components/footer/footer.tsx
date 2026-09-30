@@ -8,12 +8,12 @@ const Footer: React.FC = () => {
     <footer className="footer-container" id="footer">
       <div className="left-align">
         <p>
-          Developed by  
-          <a href="https://www.linkedin.com/in/abinav-binukumar/" target="_blank" rel="noopener noreferrer" className="footer-link">Me</a>.
+          Designed &amp; built by
+          <a href="https://www.linkedin.com/in/abinav-binukumar/" target="_blank" rel="noopener noreferrer" className="footer-link">Abinav Binukumar</a>.
         </p>
       </div>
       <div className="center-align">
-        <p>#AbinavBinukumar2024</p>
+        <p>&copy; {new Date().getFullYear()} Abinav Binukumar</p>
       </div>
       <div className="right-align social-icons">
         <a href="https://linkedin.com/in/abinav-binukumar" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>

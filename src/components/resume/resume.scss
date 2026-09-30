@@ -1,3 +1,5 @@
+@import '../../styles/retro';
+
 .resume-container {
   display: flex;
   flex-direction: column; /* Stack elements vertically */
@@ -8,121 +10,362 @@
   padding: 0; /* Remove padding */
   font-family: 'RobotoMono', sans-serif; /* Use the RobotoMono font */
 
-  .resume-title {
-    font-size: 2.5em; /* Large font size for the title */
-    text-align: left; /* Align the title text to the left */
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Remove default padding */
-    width: 100%; /* Full width for the title */
+  .resume-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    .section-title {
+      margin-bottom: 0;
+    }
   }
 
-  .content-wrapper {
-    width: 100%; /* Full width for content wrapper */
-    display: flex;
-    flex-direction: column; /* Stack items vertically by default */
+  .download-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: $pixel-bg-card;
+    border: 2px solid $pixel-purple;
+    color: #fff;
+    text-decoration: none;
+    font-family: 'RobotoMono', sans-serif;
+    font-size: 0.95em;
+    @include pixel-corners(4px);
+    @include pixel-press($pixel-purple-dark, 4px);
+  }
+}
 
-    @media (min-width: 1025px) {
-      flex-direction: row; /* Switch to a row layout on larger screens */
-      justify-content: center; /* Center content horizontally */
-    }
+.section-title {
+  font-family: $font-pixel-display;
+  font-size: 1.2em; /* Press Start 2P runs wide, keep it modest */
+  line-height: 1.6;
+  margin-bottom: 24px; /* Space below the section title */
+}
+
+.content-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Stack on smaller screens */
+  gap: 32px;
+  align-items: flex-start;
+
+  @media (min-width: 1200px) {
+    flex-direction: row; /* Side by side on wide screens - like before */
+    justify-content: center;
+    align-items: stretch; /* both columns take the height of the taller one */
   }
 }
 
 .left-column {
-  flex: 1; /* Allow the left column to take up equal space */
-  margin-bottom: 20px; /* Space below the left column */
+  width: 100%;
 
-  @media (max-width: 1024px) {
-    margin-right: 0; /* Remove right margin on smaller screens */
-    width: 100%; /* Full width on smaller screens */
+  @media (min-width: 1200px) {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
 .right-column {
-  flex: 1;
+  width: 100%;
   display: flex;
   justify-content: center;
+
+  @media (min-width: 1200px) {
+    flex: 1 1 0;
+    min-width: 0;
+    /* Without this, flexbox's default `stretch` forces .pdf-preview (and
+       the embed inside it) to fill the column's full stretched height,
+       which overrides its aspect-ratio and produces a mismatched box -
+       exactly what was causing the PDF to render at some odd zoom instead
+       of a clean 100%. Let it size itself from width + aspect-ratio only. */
+    align-items: flex-start;
+  }
+}
+
+// -- Terminal-flavored accordion tree --
+
+.terminal-tree {
+  width: 100%;
+  max-width: 900px; /* full document-width, like the resume page it replaces */
+  background: $pixel-bg-card;
+  border: 2px solid $pixel-purple-dark;
+  @include pixel-corners(10px);
+  padding: 32px clamp(16px, 5vw, 48px);
+
+  @media (min-width: 1200px) {
+    /* .left-column gets stretched to match whichever column is taller
+       (see .content-wrapper's align-items: stretch) - without this, that
+       extra height is invisible empty space below the tree's own border
+       instead of the tree's background/border actually extending to match. */
+    height: 100%;
+  }
+}
+
+.terminal-prompt {
+  font-size: 0.95em;
+  color: $pixel-muted;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed rgba(217, 164, 65, 0.35);
+
+  .prompt-user {
+    color: $pixel-cyan;
+  }
+
+  .prompt-colon {
+    color: #8c877d;
+  }
+
+  .prompt-path {
+    color: $pixel-purple;
+  }
+
+  .prompt-dollar {
+    color: #fff;
+    margin-right: 6px;
+  }
+}
+
+.tree-folder {
+  margin-bottom: 18px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tree-folder-name {
+  display: flex;
   align-items: center;
-  width: 100%; /* Full width for the right column */
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: $pixel-cyan;
+  font-family: $font-pixel-display;
+  font-size: 0.9em;
+  text-align: left;
+  padding: 6px 0;
+  cursor: pointer;
+  letter-spacing: 0.5px;
 
-  iframe {
-    width: 100%; /* Full width iframe for embedding content */
-    height: 1122px; /* Set iframe height to A4 size */
-    max-height: 93vh; /* Ensure it does not exceed the viewport height */
-    border: none; /* Remove the iframe border */
+  &:hover {
+    color: #fff;
+  }
 
-    @media (max-width: 1200px) {
-      height: 60vh; /* Reduce iframe height on smaller screens */
+  .chevron--folder {
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+  }
+}
+
+.tree-folder.is-open .chevron--folder {
+  transform: rotate(90deg);
+}
+
+.tree-folder-items {
+  position: relative;
+  margin-top: 8px;
+  margin-left: 9px;
+  padding-left: 22px;
+  border-left: 2px solid $pixel-purple-dark;
+}
+
+.tree-item {
+  margin-bottom: 4px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tree-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'RobotoMono', sans-serif;
+  text-align: left;
+  padding: 10px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(242, 193, 78, 0.06);
+  }
+
+  &.tree-item-header--static {
+    cursor: default;
+
+    &:hover {
+      background: none;
+    }
+  }
+
+  .chevron {
+    flex: 0 0 auto;
+    font-size: 0.7em;
+    color: $pixel-purple;
+    transition: transform 0.2s ease;
+    margin-top: 6px;
+  }
+}
+
+.tree-item.is-open .tree-item-header .chevron {
+  transform: rotate(90deg);
+  color: $pixel-cyan;
+}
+
+// LinkedIn-style company badge. Falls back to a colored initials monogram;
+// each company gets a stable color via a small hash-free palette rotation.
+// Every badge - real logo or monogram fallback - shares the same
+// long-rectangle footprint so the row stays visually consistent.
+.company-logo {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-pixel-display;
+  font-size: 0.6em;
+  color: #fff;
+  background: $pixel-purple-dark;
+  @include pixel-corners(4px);
+
+  &.logo-el { background: #7c1fb0; }
+  &.logo-rb { background: #1f6fb0; }
+  &.logo-ot { background: #b0261f; }
+  &.logo-gt { background: #1fb08f; }
+  &.logo-eh { background: #b0691f; }
+  &.logo-ms { background: #3e6fff; }
+
+  &.company-logo--image {
+    background: #fff;
+    padding: 4px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    // G-Tec's logo has light text meant for a dark background - on our
+    // white card it was disappearing, leaving what looked like a blank
+    // white box. Match its own design instead of forcing white.
+    &.company-logo--on-dark {
+      background: $pixel-bg;
     }
   }
 }
 
-
-.section-container {
-  position: relative; /* Position relative for the section */
+// Title/company on one line (wraps naturally as text), dates always on
+// their own line right below - so a long title never shoves the dates
+// onto an unpredictable, oddly-floating line.
+.tree-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.section-title {
-  font-size: 2.5em; /* Large font size for section titles */
-  margin-bottom: 20px; /* Space below the section title */
-  position: relative; /* Position relative for future positioning */
-}
+.tree-item-title {
+  font-size: 1.05em;
+  font-weight: bold;
 
-.line-container {
-  position: relative; /* Relative positioning for the line indicator */
-
-  &:before {
-    content: ""; /* Create a vertical line */
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px; /* Set the line width */
-    background: #d3d3d3; /* Light gray color for the line */
+  .company {
+    font-weight: normal;
+    color: $pixel-cyan;
   }
 }
 
-.job-container {
-  margin-bottom: 20px; /* Space below each job section */
-  padding-left: 40px; /* Space on the left to align content */
-  position: relative; /* Relative positioning for the job container */
-
-  &:before {
-    content: ""; /* Create a horizontal line for job sections */
-    position: absolute;
-    top: 1em;
-    left: 0;
-    width: 20px; /* Set width of the horizontal line */
-    height: 2px; /* Set height of the line */
-    background: #d3d3d3; /* Light gray color for the line */
-  }
+.tree-item-dates {
+  font-size: 0.85em;
+  color: #8c877d;
 }
 
-.job-title {
-  font-size: 1.5em; /* Font size for job titles */
-  margin: 10px 0; /* Space above and below the job title */
-  position: relative; /* Relative positioning for future positioning */
+.tree-item-meta {
+  font-size: 0.85em;
+  color: #8c877d;
 }
 
-.company {
-  color: #8a2be2; /* Purple color for company names */
-}
-
-.job-dates {
-  font-size: 1em; /* Font size for job dates */
-  color: #d3d3d3; /* Light gray color for job dates */
-  margin: 5px 0 10px 0; /* Spacing around job dates */
+.tree-item-body {
+  list-style: none;
+  margin: 4px 0 10px 46px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .bullet-point {
-  list-style-type: none; /* Remove default list style */
-  position: relative; /* Relative positioning for bullet points */
-  padding-left: 20px; /* Space on the left for the bullet points */
-  font-size: 1em; /* Font size for the bullet points */
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.95em;
+  line-height: 1.5;
+  color: #8c877d;
 
   &:before {
-    content: ">"; /* Arrow symbol for bullet points */
+    content: '>';
     position: absolute;
-    left: 0; /* Align bullet point to the left */
-    color: #8a2be2; /* Purple color for bullet point arrows */
+    left: 0;
+    color: $pixel-purple;
+  }
+}
+
+@media (max-width: 600px) {
+  .tree-item-header {
+    gap: 8px;
+  }
+
+  .company-logo {
+    width: 44px;
+    height: 28px;
+    font-size: 0.5em;
+  }
+
+  .tree-folder-items {
+    margin-left: 4px;
+    padding-left: 14px;
+  }
+
+  .tree-item-body {
+    margin-left: 36px;
+  }
+}
+
+// -- Resume PDF preview (restored) --
+
+.pdf-preview {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  embed {
+    /* The PDF's actual page is A4 (596x842pt) - at the browser's standard
+       96 CSS-px/inch, that's 794x1122px at true 100% zoom. Anything other
+       than that exact pixel size makes the embedded viewer auto-fit to a
+       non-100% zoom level. Sizing this any other way (matching a sibling's
+       height, some vh-based guess, etc.) was always going to show up as
+       "not 100%" - so this is fixed at its native size, full stop, and the
+       tree (which has `align-items: stretch` on its shared parent) matches
+       *this* height instead, rather than the other way around.
+       aspect-ratio stays as a fallback for the narrow-screen case below,
+       where width has to shrink and height must shrink with it. */
+    width: 794px;
+    max-width: 100%;
+    aspect-ratio: 794 / 1122;
+    border: 3px solid $pixel-purple;
+    background: #fff;
+    @include pixel-corners(10px);
   }
 }

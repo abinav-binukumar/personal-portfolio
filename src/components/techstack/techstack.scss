@@ -1,3 +1,5 @@
+@import '../../styles/retro';
+
 .about-technologies-container {
   width: 80%; /* Set width to 80% for consistent margin with other components */
   margin: 0 auto; /* Center the container horizontally */
@@ -7,8 +9,10 @@
 
   .about-technologies {
     h2 {
-      font-size: 2em; /* Large font size for section title */
-      margin-bottom: 20px; /* Space below the title */
+      font-family: $font-pixel-display;
+      font-size: 1.2em; /* Press Start 2P runs wide */
+      line-height: 1.6;
+      margin-bottom: 24px; /* Space below the title */
       text-align: left; /* Align title to the left */
       color: #fff; /* White title */
     }
@@ -27,16 +31,23 @@
       }
 
       .technology-category {
-        background-color: #2a2a2a; /* Dark background for each category */
+        background-color: $pixel-bg-card; /* Dark arcade background for each category */
         padding: 20px; /* Padding inside each category box */
-        border-radius: 10px; /* Rounded corners */
+        border: 2px solid $pixel-purple-dark;
+        @include pixel-corners(8px);
         color: #fff; /* White text color */
+        transition: border-color 0.15s ease, transform 0.15s ease;
+
+        &:hover {
+          border-color: $pixel-purple;
+          transform: translate(-3px, -3px);
+        }
 
         h3 {
           font-size: 1.5em; /* Font size for category headings */
           margin-bottom: 30px; /* Space below the category title */
           text-align: center; /* Center-align category titles */
-          color: #fff; /* White color for category titles */
+          color: $pixel-cyan; /* Neon cyan category titles */
         }
 
         .technology-items {
@@ -58,10 +69,12 @@
             align-items: center; /* Center-align items */
             font-size: 1.2em; /* Font size for text inside technology items */
             color: #fff; /* White text color */
-            transition: color 0.3s ease; /* Smooth color transition on hover */
+            transition: color 0.2s ease; /* Smooth color transition on hover */
             cursor: default; /* Keep cursor default, not clickable */
 
-            i {
+            svg {
+              width: 1em;
+              height: 1em;
               font-size: 3em; /* Large icon size */
               margin-bottom: 10px; /* Space below the icon */
               color: inherit; /* Inherit color from parent */
@@ -76,7 +89,7 @@
             }
 
             &:hover {
-              color: #8a2be2; /* Change color to purple on hover */
+              color: $pixel-purple; /* Change color to purple on hover */
             }
           }
         }

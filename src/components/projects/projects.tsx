@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaGithub, FaGlobe } from 'react-icons/fa';
+import { pixel, fontPixelDisplay, pixelCorners } from '../../styles/retro';
+import PixelAvidReaderArt from './PixelAvidReaderArt';
 
 // Importing assets for project GIFs
-import investSmartGif from '../../assets/projects/InvestSmart.gif';
-import pokePCGif from '../../assets/projects/PokePC.gif';
+import niyaGif from '../../assets/projects/Niya.gif';
 import lightUpGif from '../../assets/projects/LightUp.gif';
 import pongGameGif from '../../assets/projects/PongGame.gif';
 import plateProcessorGif from '../../assets/projects/PlateProcessor.gif';
-import portfolioGif from '../../assets/projects/Portfolio.gif'; 
+import portfolioGif from '../../assets/projects/Portfolio.gif';
 
 // Main container for all projects, handles layout and styling
 const ProjectsContainer = styled.div`
@@ -25,8 +25,10 @@ const ProjectsContainer = styled.div`
 
 // Title for the projects section
 const SectionTitle = styled.h2`
-  font-size: 2.5em; /* Large font size for section title */
-  margin-bottom: 20px; /* Space below the title */
+  font-family: ${fontPixelDisplay};
+  font-size: 1.4em; /* Press Start 2P runs wide */
+  line-height: 1.6;
+  margin-bottom: 24px; /* Space below the title */
   text-align: left; /* Align text to the left */
   width: 100%; /* Take up full width of the container */
   box-sizing: border-box; /* Include padding and borders in width calculation */
@@ -44,18 +46,24 @@ const BigProjectsContainer = styled.div`
 const ProjectContainer = styled.div`
   width: 100%; /* Full width for individual projects */
   margin-bottom: 40px; /* Space below each project */
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
-  border-radius: 10px; /* Rounded corners */
+  background: ${pixel.bgCard}; /* Dark arcade card background */
+  border: 2px solid ${pixel.purpleDark};
+  clip-path: ${pixelCorners(10)};
   padding: 20px; /* Padding around the project content */
   text-align: center; /* Center the text inside the project */
   position: relative; /* Relative positioning for background media */
   overflow: hidden; /* Ensure no content overflows outside the box */
+  transition: transform 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    transform: translate(-3px, -3px);
+    border-color: ${pixel.purple};
+  }
 
   /* Style for project images or videos */
   img, video {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    border-radius: 10px; /* Rounded corners for the media */
     object-fit: cover; /* Cover the area without distortion */
     position: absolute; /* Position absolutely within the container */
     top: 0;
@@ -64,9 +72,17 @@ const ProjectContainer = styled.div`
     opacity: 0.3; /* Semi-transparent to not overpower the text */
   }
 
+  /* Original stand-in illustration (not a screenshot) for projects with no media yet */
+  .avidreader-art {
+    display: block;
+    margin: 0 auto 14px;
+    position: relative;
+    z-index: 1;
+  }
+
   /* Style for project titles */
   h3 {
-    font-size: 2em; /* Large font for project titles */
+    font-size: 1.6em; /* Large font for project titles */
     margin-bottom: 10px; /* Space below the title */
     z-index: 1; /* Ensure the title is above the background media */
     position: relative; /* Keep relative positioning for z-index */
@@ -91,7 +107,7 @@ const ProjectContainer = styled.div`
 
   /* Style for individual links */
   a {
-    color: #9b59b6; /* Purple color for links */
+    color: ${pixel.cyan}; /* Neon cyan for links */
     font-size: 1.2em; /* Font size for links */
     display: flex; /* Flex layout for link icon and text */
     align-items: center; /* Center icon and text vertically */
@@ -101,7 +117,7 @@ const ProjectContainer = styled.div`
 
     /* Hover state for links */
     &:hover {
-      color: #d4a1ff; /* Lighten the link color on hover */
+      color: ${pixel.purple}; /* Purple on hover */
     }
   }
 
@@ -111,6 +127,20 @@ const ProjectContainer = styled.div`
     margin-bottom: 20px;
     padding: 10px;
   }
+`;
+
+// Small "in progress" tag for projects without finished media yet
+const InProgressTag = styled.span`
+  display: inline-block;
+  font-size: 0.6em;
+  letter-spacing: 1px;
+  color: ${pixel.bg};
+  background: ${pixel.cyan};
+  padding: 4px 10px;
+  margin-bottom: 14px;
+  clip-path: ${pixelCorners(3)};
+  position: relative;
+  z-index: 1;
 `;
 
 // Container for small projects, wraps them and spaces them out
@@ -125,18 +155,24 @@ const SmallProjectsContainer = styled.div`
 const SmallProject = styled.div`
   width: 45%; /* Width for small projects (45% allows 2 per row) */
   margin-bottom: 40px; /* Space below each small project */
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
-  border-radius: 10px; /* Rounded corners */
+  background: ${pixel.bgCard}; /* Dark arcade card background */
+  border: 2px solid ${pixel.purpleDark};
+  clip-path: ${pixelCorners(8)};
   padding: 20px; /* Padding around the content */
   text-align: center; /* Center text inside the project */
   position: relative; /* Relative positioning for background media */
   overflow: hidden; /* Prevent overflow outside the project box */
+  transition: transform 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    transform: translate(-3px, -3px);
+    border-color: ${pixel.purple};
+  }
 
   /* Style for project images or videos */
   img, video {
     width: 100%; /* Full width for media */
     height: 100%; /* Full height for media */
-    border-radius: 10px; /* Rounded corners for the media */
     object-fit: cover; /* Cover the area without distortion */
     position: absolute; /* Position the media absolutely */
     top: 0;
@@ -147,7 +183,7 @@ const SmallProject = styled.div`
 
   /* Style for small project titles */
   h3 {
-    font-size: 1.5em; /* Smaller font for small project titles */
+    font-size: 1.3em; /* Smaller font for small project titles */
     margin-bottom: 10px; /* Space below the title */
     z-index: 1; /* Ensure title is above the background media */
     position: relative; /* Keep relative positioning */
@@ -172,7 +208,7 @@ const SmallProject = styled.div`
 
   /* Style for individual links */
   a {
-    color: #9b59b6; /* Purple color for links */
+    color: ${pixel.cyan}; /* Neon cyan for links */
     font-size: 1em; /* Smaller font size for links */
     display: flex; /* Flex layout for icon and text */
     align-items: center; /* Align icon and text vertically */
@@ -182,7 +218,7 @@ const SmallProject = styled.div`
 
     /* Hover state for links */
     &:hover {
-      color: #d4a1ff; /* Lighten link color on hover */
+      color: ${pixel.purple}; /* Purple on hover */
     }
   }
 
@@ -201,23 +237,22 @@ const SmallProject = styled.div`
   }
 `;
 
-// Handle the "Coming Soon" click event
-const handleComingSoonClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-  event.preventDefault(); /* Prevent the default link behavior */
-  alert('Coming soon!'); /* Show an alert when clicked */
-};
-
 const Projects: React.FC = () => {
   return (
     <ProjectsContainer id="projects">
       <SectionTitle>Projects</SectionTitle>
       <BigProjectsContainer>
-      <ProjectContainer>
-          <img src={investSmartGif} alt="Kenan-Hospital-Appoinment-System" />
-              <h3>Kenan Hospital Appointment System</h3>
-              <p>A hospital appointment management system (App and Website) with data storage, designed for client needs, featuring scheduling and cancellation policies. Built with MongoDB, React Native and ReactJS.</p>
-</ProjectContainer>
-
+        <ProjectContainer>
+          <InProgressTag>SCREENSHOTS COMING SOON</InProgressTag>
+          <PixelAvidReaderArt className="avidreader-art" />
+          <h3>AvidReader - AI-Assisted Reading Dashboard</h3>
+          <p>Capstone project: an AI-powered reading platform that lets users interact with documents through grounded Q&amp;A, summaries, quizzes, flashcards, and concept visualization.</p>
+        </ProjectContainer>
+        <ProjectContainer>
+          <img src={niyaGif} alt="niya Hospital Appointment Management System" />
+          <h3>niya - Hospital Appointment Management System</h3>
+          <p>A hospital appointment management platform (mobile app and admin website) with scheduling, cancellation policies, and patient flow tracking. Built with MongoDB, React Native, and ReactJS.</p>
+        </ProjectContainer>
       </BigProjectsContainer>
 
       <SmallProjectsContainer>
@@ -242,13 +277,6 @@ const Projects: React.FC = () => {
           <p>Built in React, this portfolio website is designed to showcase my best work and skills. Thanks for checking it out!</p>
         </SmallProject>
       </SmallProjectsContainer>
-
-      <BigProjectsContainer>
-        <ProjectContainer>
-          <h3>More Projects Coming Soon...</h3>
-          <p>Stay tuned!</p>
-        </ProjectContainer>
-      </BigProjectsContainer>
     </ProjectsContainer>
   );
 };

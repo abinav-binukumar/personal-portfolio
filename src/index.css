@@ -1,3 +1,12 @@
+/* Without this, an element's `padding`/`border` is added ON TOP of its
+   declared width/flex-basis instead of being included in it - which is what
+   was making the hero's LeftContainer (flex: 0 0 35% + padding: 40px, no
+   flex-shrink to compensate) push the whole row 80px past the viewport on
+   desktop, clipping the ammo/skip text on the right edge. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

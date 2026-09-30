@@ -1,9 +1,12 @@
+@import '../../styles/retro';
+
 .footer-container {
-  background-color: #1e1e1e; /* Dark background for the footer */
+  background-color: $pixel-bg; /* Dark arcade background for the footer */
   color: #fff; /* White text color */
   padding: 20px 40px; /* Padding around the content */
   text-align: center; /* Center text by default */
   font-family: 'RobotoMono', sans-serif;
+  border-top: 3px solid $pixel-purple-dark;
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
   align-items: center; /* Vertically align items in the grid */
@@ -29,11 +32,11 @@
   }
 
   .purple-heart {
-    color: #8a2be2; /* Purple color for the heart icon */
+    color: $pixel-purple; /* Purple color for the heart icon */
   }
 
   .footer-link {
-    color: #8a2be2; /* Purple color for footer links */
+    color: $pixel-cyan; /* Neon cyan for footer links */
     text-decoration: underline; /* Underline links */
     margin-left: 5px; /* Small left margin to separate from text */
   }
@@ -49,12 +52,12 @@
     }
 
     a {
-      color: #d3d3d3; /* Light grey for social icons */
+      color: #8c877d; /* Light grey for social icons */
       font-size: 1.5em; /* Size of social icons */
-      transition: color 0.3s; /* Smooth transition for hover effect */
+      transition: color 0.2s; /* Smooth transition for hover effect */
 
       &:hover {
-        color: #8a2be2; /* Change icon color to purple on hover */
+        color: $pixel-purple; /* Change icon color to purple on hover */
       }
     }
   }

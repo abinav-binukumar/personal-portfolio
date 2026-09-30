@@ -7,8 +7,6 @@ import Header from './components/header/header.tsx';
 // @ts-ignore
 import Hero from './components/hero/hero.tsx';
 // @ts-ignore
-import SocialLinks from './components/social_links/social_links.tsx';
-// @ts-ignore
 import Resume from './components/resume/resume.tsx';
 // @ts-ignore
 import Projects from './components/projects/projects.tsx';
@@ -18,11 +16,10 @@ import About from './components/about/about.tsx';
 import Footer from './components/footer/footer.tsx';
 // @ts-ignore
 import Techstack from './components/techstack/techstack.tsx';
-// @ts-ignore
-import ContributionMap from './components/contribution_map/contribution_map.tsx';
+import { pixel } from './styles/retro';
 
 const AppContainer = styled.div`
-  background-color: #1e1e1e; /* Match the background color of the hero section */
+  background-color: ${pixel.bg}; /* Match the background color of the hero section */
   min-height: 100vh;
   padding: 20px 0;
 `;
@@ -45,8 +42,6 @@ const App: React.FC = () => {
           <Projects />
           
           <Techstack />
-          
-          <SocialLinks />
         </MainContent>
         <Footer />
       </AppContainer>

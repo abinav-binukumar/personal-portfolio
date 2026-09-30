@@ -1,16 +1,34 @@
-import React, { useEffect, useState, useRef } from 'react';
-import styled, { keyframes, css } from 'styled-components';
-import spaceship from '../../assets/spaceship/webp/spaceship.webp'; // Importing spaceship image
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import RepelText from './RepelText';
+import HeroGame from './HeroGame';
+import ShipPanel from './ShipPanel';
+import { pixel, fontPixelDisplay } from '../../styles/retro';
 
-// Main container for the hero section
+// Main container for the hero section.
+// The header above this is sticky (occupies real space, doesn't overlay), and
+// AppContainer (App.tsx) adds 20px of padding above it too - so a naive
+// `100vh` here makes the total page taller than the viewport by both of
+// those, which is exactly why the ship/game sprite (anchored near the bottom
+// of this section) was ending up below the fold. --header-height is measured
+// and set by header.tsx; 84px is just a first-paint fallback.
+const APP_CONTAINER_TOP_PADDING = '20px';
 const HeroContainer = styled.section`
   display: flex;
   flex-direction: column; /* Stack items vertically by default */
-  min-height: 100vh; /* Full viewport height */
-  background-color: #1e1e1e; /* Dark background */
+  min-height: calc(100vh - var(--header-height, 84px) - ${APP_CONTAINER_TOP_PADDING});
+  background-color: ${pixel.bg}; /* Dark arcade background */
   color: #fff; /* White text */
   overflow: hidden; /* Prevent overflow */
   font-family: 'RobotoMono', sans-serif; /* Use RobotoMono font */
+
+  @media (max-width: 768px) {
+    /* Fit within one screen so the ship/game isn't pushed below the fold -
+       was min-height, which let the text block and the game each
+       independently demand half the screen. */
+    height: calc(100vh - var(--header-height, 61px) - ${APP_CONTAINER_TOP_PADDING});
+    overflow-y: auto;
+  }
 
   @media (min-width: 768px) {
     flex-direction: row; /* On larger screens, layout side by side */
@@ -28,135 +46,139 @@ const LeftContainer = styled.div`
   margin-top: -10%; /* Adjust to move text slightly up */
 
   @media (max-width: 768px) {
-    padding-top: 0; /* Remove padding for smaller screens */
+    flex: 0 0 auto; /* Size to its own content instead of claiming half the screen */
+    padding: 16px 20px 8px; /* Compact padding for smaller screens */
     margin-top: 0; /* Remove negative margin for mobile */
   }
 
   @media (min-width: 768px) {
-    flex: 0 0 35%; /* Take up 35% of the space on larger screens */
+    flex: 0 0 38%; /* Take up space on larger screens - a bit more than a third, so the title has room */
   }
 `;
 
-// Right container for the spaceship and animations
+// Right container: hosts the flip card (ship logo <-> asteroids game).
+// This is the scroll-anchor target for the header's "Contact" link - it must
+// stay a plain, untransformed element so scrollIntoView lands correctly
+// (the inner flip faces are rotated in 3D and are an unreliable scroll target).
 const RightContainer = styled.div`
   flex: 1; /* Take up equal space */
-  position: relative; /* Needed for absolute positioning of circles */
-  display: flex;
-  justify-content: center; /* Center the spaceship horizontally */
-  align-items: center; /* Center the spaceship vertically */
+  position: relative;
   overflow: hidden; /* Prevent overflow of elements */
   min-height: 50vh; /* Minimum height for smaller screens */
 
-  @media (min-width: 768px) {
-    flex: 0 0 65%; /* Take up 65% of the space on larger screens */
+  @media (max-width: 768px) {
+    flex: 1 1 auto; /* Fill whatever room LeftContainer doesn't need */
+    min-height: 280px; /* Modest floor instead of forcing half the screen */
   }
-`;
-
-// Floating animation for the spaceship (smooth up and down motion)
-const floatAnimation = keyframes`
-  0% {
-    transform: translateY(0); /* Start at original position */
-  }
-  50% {
-    transform: translateY(-10px); /* Move 10px up */
-  }
-  100% {
-    transform: translateY(0); /* Return to original position */
-  }
-`;
-
-// Styling for the spaceship image with floating animation
-const Spaceship = styled.img`
-  width: 80%; /* Set spaceship width to 80% of the container */
-  z-index: 1; /* Ensure it stays above any background elements */
-  animation: ${floatAnimation} 3s infinite; /* Apply floating animation */
 
   @media (min-width: 768px) {
-    width: 50%; /* Make it smaller on larger screens */
+    flex: 0 0 62%; /* Take up the rest of the space on larger screens */
   }
 `;
 
-// Animation for shrinking and moving circles
-const shrinkAndMove = (left: number, top: number, containerWidth: number, containerHeight: number) => keyframes`
-  0% {
-    transform: translate(0, 0) scale(1); /* Start at full size and original position */
-    opacity: 1; /* Fully visible */
-  }
-  100% {
-    transform: translate(${containerWidth / 2 - left}px, ${containerHeight / 2 - top}px) scale(0); /* Move and shrink */
-    opacity: 0; /* Fade out */
+// Perspective wrapper for the flip animation
+const FlipContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 50vh;
+  position: relative;
+  perspective: 1600px;
+`;
+
+// The rotating card - swaps between the ship logo and the game
+const FlipInner = styled.div<{ $flipped: boolean }>`
+  width: 100%;
+  height: 100%;
+  min-height: 50vh;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.15, 0.2, 1);
+  transform: rotateY(${({ $flipped }) => ($flipped ? 180 : 0)}deg);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 `;
 
-// Circle styling with animation based on position and size
-const Circle = styled.div<{ left: number; top: number; size: number; containerWidth: number; containerHeight: number }>`
-  position: absolute; /* Absolute positioning for floating circles */
-  background-color: #fff; /* White background for the circles */
-  border-radius: 50%; /* Make the div a circle */
-  opacity: 0.8; /* Slight transparency */
-
-  ${({ left, top, size, containerWidth, containerHeight }) => css`
-    width: ${size}px; /* Set width based on random size */
-    height: ${size}px; /* Set height to match width */
-    left: ${left}px; /* Set horizontal position */
-    top: ${top}px; /* Set vertical position */
-    animation: ${shrinkAndMove(left, top, containerWidth, containerHeight)} 2s linear forwards; /* Animate shrinking */
-  `}
+// $hidden is belt-and-suspenders on top of backface-visibility: some browsers
+// still let clicks land on a backface-hidden element after a reflow, which
+// was swallowing clicks meant for the game's input/buttons underneath.
+const FlipFace = styled.div<{ $hidden: boolean }>`
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
+  pointer-events: ${({ $hidden }) => ($hidden ? 'none' : 'auto')};
 `;
 
-// Styling for the gradient text (title)
+const FlipFaceBack = styled(FlipFace)`
+  transform: rotateY(180deg);
+`;
+
+// Headline above the gradient title - sized explicitly (rather than the
+// browser's large default h1 size) so it doesn't eat mobile's limited height
+const TopLine = styled.h1`
+  font-size: 1.1em;
+  line-height: 1.4;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 1.5em;
+  }
+`;
+
+// Styling for the title (per-letter color handled by RepelText, since a
+// background-clip gradient can't paint through each letter's own transform layer)
 const GradientText = styled.h2`
-  background: linear-gradient(90deg, #8a2be2, #d4a1ff); /* Purple gradient */
-  -webkit-background-clip: text; /* Clip background to text */
-  -webkit-text-fill-color: transparent; /* Make text transparent to show gradient */
-  font-size: 4em; /* Large font size */
-  font-weight: bold; /* Bold text */
+  font-family: ${fontPixelDisplay};
+  font-size: 1.8em; /* Large font size (Press Start 2P runs big) */
+  line-height: 1.6;
   margin: 0.5em 0; /* Space around the text */
+
+  @media (max-width: 768px) {
+    font-size: 1.3em;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 2em;
+  }
 `;
 
 // Styling for the typewriter effect text
 const TypewriterText = styled.div`
-  color: #d4a1ff; /* Light purple color */
+  color: ${pixel.cyan}; /* Neon cyan accent */
   font-size: 1.5em; /* Medium font size */
   margin-top: 0.5em; /* Space above the text */
   white-space: nowrap; /* Prevent text from wrapping */
   overflow: hidden; /* Hide overflowing text */
 `;
 
-// Interface for circle properties
-interface CircleProps {
-  id: number; /* Unique ID for each circle */
-  left: number; /* Horizontal position */
-  top: number; /* Vertical position */
-  size: number; /* Circle size */
-  containerWidth: number; /* Width of the container */
-  containerHeight: number; /* Height of the container */
-}
+// Array of possible headline texts
+const topLines = [
+  "In a galaxy far, far away, I created this portfolio.",
+  "Winter is coming, but you're safe here. Explore my work.",
+  "Welcome to my corner of the web!",
+  "Greetings! I'm thrilled to have you here.",
+  "Hi! Thanks for dropping by.",
+  "Say hello to my little projects!",
+  "Welcome to the dark side of my portfolio.",
+];
+
+// Array of texts for the typewriter effect
+const typewriterTexts = [
+  "Software Developer",
+  "Cloud & DevOps Engineer",
+  "Full-Stack Builder",
+  "Coffee Lover",
+  "Hackathon Fanatic"
+];
 
 // Main Hero component
 const Hero: React.FC = () => {
-  const [circles, setCircles] = useState<CircleProps[]>([]); // State to manage circles
   const [topLine, setTopLine] = useState(''); // State for random headline
   const [currentText, setCurrentText] = useState(''); // State for typewriter text
-  const rightContainerRef = useRef<HTMLDivElement>(null); // Ref to get the right container's dimensions
-
-  const topLines = [
-    "In a galaxy far, far away, I created this portfolio.",
-    "Winter is coming, but you’re safe here. Explore my work.",
-    "Welcome to my corner of the web!",
-    "Greetings! I'm thrilled to have you here.",
-    "Hi! Thanks for dropping by.",
-    "Say hello to my little projects!",
-    "Welcome to the dark side of my portfolio.",
-  ]; // Array of possible headline texts
-
-  const typewriterTexts = [
-    "Software Developer",
-    "Graphic Designer",
-    "Photography Enthusiast",
-    "Coffee Lover",
-    "Hackathon Fanatic"
-  ]; // Array of texts for the typewriter effect
+  const [flipped, setFlipped] = useState(false); // Whether the game side is showing
 
   useEffect(() => {
     // Pick a random top line for the header when the component mounts
@@ -164,105 +186,84 @@ const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Typewriter effect
-    const typeWriter = () => {
-      let i = 0;
-      let textPos = 0;
-      let currentString = typewriterTexts[i];
-      const speed = 100; // Typing speed
-      const deleteSpeed = 50; // Deleting speed
-      const waitTime = 2000; // Time before deleting starts
+    // Typewriter effect. This needs a real cleanup: React.StrictMode
+    // (index.tsx) deliberately mounts every effect twice in dev to catch
+    // exactly this kind of missing teardown - without clearTimeout here,
+    // that second mount started a second, never-cancelled type/delete loop
+    // racing the first one and stepping on the same currentText state,
+    // which is what made the typing/deleting look completely garbled.
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let wordIndex = 0;
 
-      // Function to handle typing the text
-      function type() {
-        setCurrentText(currentString.substring(0, textPos) + '_'); // Add typing cursor
+    const TYPE_SPEED = 70;
+    const DELETE_SPEED = 18; // fast, like holding backspace
+    const HOLD_TIME = 1600;
 
-        if (textPos++ === currentString.length) {
-          setTimeout(() => deleteText(), waitTime); // Wait and start deleting
+    const startWord = () => {
+      const word = typewriterTexts[wordIndex];
+      let pos = 0;
+
+      const typeStep = () => {
+        if (cancelled) return;
+        pos += 1;
+        setCurrentText(word.slice(0, pos) + '_');
+        timeoutId = setTimeout(pos >= word.length ? deleteStep : typeStep, pos >= word.length ? HOLD_TIME : TYPE_SPEED);
+      };
+
+      const deleteStep = () => {
+        if (cancelled) return;
+        pos -= 1;
+        setCurrentText(word.slice(0, Math.max(pos, 0)) + '_');
+        if (pos <= 0) {
+          wordIndex = (wordIndex + 1) % typewriterTexts.length;
+          timeoutId = setTimeout(startWord, TYPE_SPEED);
         } else {
-          setTimeout(type, speed); // Continue typing
+          timeoutId = setTimeout(deleteStep, DELETE_SPEED);
         }
-      }
+      };
 
-      // Function to handle deleting the text
-      function deleteText() {
-        setCurrentText(currentString.substring(0, textPos) + '_'); // Add typing cursor while deleting
-
-        if (textPos-- === 0) {
-          i = (i + 1) % typewriterTexts.length; // Cycle through text array
-          currentString = typewriterTexts[i]; // Get next string
-          setTimeout(type, speed); // Start typing again
-        } else {
-          setTimeout(deleteText, deleteSpeed); // Continue deleting
-        }
-      }
-
-      type(); // Start the typewriter effect
+      typeStep();
     };
 
-    typeWriter(); // Invoke the typewriter function on component mount
+    startWord();
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
-    // Create new circles every 333 milliseconds for the spaceship animation
-    const interval = setInterval(() => {
-      if (rightContainerRef.current) {
-        const containerWidth = rightContainerRef.current.clientWidth; // Get container width
-        const containerHeight = rightContainerRef.current.clientHeight; // Get container height
-
-        const newCircles: CircleProps[] = Array.from({ length: 7 }).map(() => {
-          const isVerticalEdge = Math.random() > 0.5; // Randomly decide if circle spawns at vertical edge
-          const left = isVerticalEdge 
-            ? (Math.random() > 0.5 ? 0 : containerWidth - 10)  // Either the left or right edge
-            : Math.random() * containerWidth; // Random horizontal position
-
-          const top = !isVerticalEdge 
-            ? (Math.random() > 0.5 ? 0 : containerHeight - 10)  // Either the top or bottom edge
-            : Math.random() * containerHeight; // Random vertical position
-
-          return {
-            id: Date.now() + Math.random(), // Generate unique ID
-            left,
-            top,
-            size: Math.random() * 20 + 10, // Random size for the circle
-            containerWidth,
-            containerHeight,
-          };
-        });
-
-        setCircles(prevCircles => [...prevCircles, ...newCircles]); // Add new circles to state
-
-        // Remove the new circles after 2 seconds
-        setTimeout(() => {
-          setCircles(prevCircles =>
-            prevCircles.filter(circle => !newCircles.some(newCircle => newCircle.id === circle.id))
-          );
-        }, 2000);
-      }
-    }, 333); // Create circles every 333ms
-
-    return () => clearInterval(interval); // Clean up interval on component unmount
+    // The header's "Contact" link scrolls here directly (see header.tsx);
+    // this event also flips the card open so the contact form is visible.
+    const openGame = () => setFlipped(true);
+    window.addEventListener('open-contact-game', openGame);
+    return () => window.removeEventListener('open-contact-game', openGame);
   }, []);
 
   return (
-    <HeroContainer>
+    <HeroContainer id="home">
       <LeftContainer>
-        <h1>{topLine}</h1> {/* Display random headline */}
-        <GradientText>Hello<br/>I'm Abinav.</GradientText> {/* Display name with gradient effect */}
+        <TopLine>{topLine}</TopLine> {/* Display random headline */}
+        <GradientText>
+          <RepelText text="Hello" gradient={['#d9a441', '#d9a441']} />
+          <br />
+          <RepelText text="I'm Abinav." />
+        </GradientText>
         <TypewriterText>{currentText}</TypewriterText> {/* Display typewriter effect text */}
       </LeftContainer>
-      <RightContainer ref={rightContainerRef}>
-        <Spaceship src={spaceship} alt="Spaceship" /> {/* Display the floating spaceship */}
-        {circles.map(circle => (
-          <Circle
-            key={circle.id} /* Key for each circle */
-            left={circle.left} /* Horizontal position */
-            top={circle.top} /* Vertical position */
-            size={circle.size} /* Circle size */
-            containerWidth={circle.containerWidth} /* Width of the container */
-            containerHeight={circle.containerHeight} /* Height of the container */
-          />
-        ))}
+      <RightContainer id="contact">
+        <FlipContainer>
+          <FlipInner $flipped={flipped}>
+            <FlipFace $hidden={flipped}>
+              <ShipPanel onActivate={() => setFlipped(true)} active={!flipped} />
+            </FlipFace>
+            <FlipFaceBack $hidden={!flipped}>
+              <HeroGame active={flipped} onExit={() => setFlipped(false)} />
+            </FlipFaceBack>
+          </FlipInner>
+        </FlipContainer>
       </RightContainer>
     </HeroContainer>
   );

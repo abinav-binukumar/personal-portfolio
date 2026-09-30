@@ -1,0 +1,67 @@
+// Shared pixel-arcade design tokens. Import with:
+//   @import '../../styles/retro';
+// and reference $pixel-gold, @include pixel-corners(8px), etc. directly.
+//
+// Palette: near-black + warm gold + cream, instead of the earlier
+// purple/cyan neon scheme - keeps the pixel/arcade personality without
+// tipping into "crypto/casino" territory. $pixel-purple/$pixel-cyan/
+// $pixel-white are kept as aliases so every component that already
+// references them (most of the site) picks up the new colors for free.
+
+$pixel-bg: #090909;
+$pixel-bg-alt: #121212;
+$pixel-bg-card: #121212;
+$pixel-gold: #d9a441;
+$pixel-gold-dark: #a6792f;
+$pixel-bright-gold: #f2c14e;
+$pixel-cream: #f4f0e6;
+$pixel-muted: #8c877d;
+$pixel-black: #090909;
+
+// Aliases - old names, new values. Every existing component keeps working.
+$pixel-purple: $pixel-gold;
+$pixel-purple-dark: $pixel-gold-dark;
+$pixel-cyan: $pixel-bright-gold;
+$pixel-white: $pixel-cream;
+
+$font-pixel-display: 'Press Start 2P', 'RobotoMono', monospace;
+$font-pixel-body: 'RobotoMono', monospace;
+
+// Stair-stepped "pixel" corners instead of rounded ones.
+@mixin pixel-corners($size: 8px) {
+  clip-path: polygon(
+    0 $size,
+    $size $size,
+    $size 0,
+    calc(100% - #{$size}) 0,
+    calc(100% - #{$size}) $size,
+    100% $size,
+    100% calc(100% - #{$size}),
+    calc(100% - #{$size}) calc(100% - #{$size}),
+    calc(100% - #{$size}) 100%,
+    $size 100%,
+    $size calc(100% - #{$size}),
+    0 calc(100% - #{$size})
+  );
+}
+
+// Hard, un-blurred offset shadow like a retro game panel.
+@mixin pixel-shadow($color: $pixel-black, $size: 6px) {
+  box-shadow: $size $size 0 0 $color;
+}
+
+// "Press-down" button interaction: lifts on hover, presses flat on click.
+@mixin pixel-press($color: $pixel-black, $size: 6px) {
+  box-shadow: $size $size 0 0 $color;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: #{$size + 2px} #{$size + 2px} 0 0 $color;
+  }
+
+  &:active {
+    transform: translate(#{$size}, #{$size});
+    box-shadow: 0 0 0 0 $color;
+  }
+}

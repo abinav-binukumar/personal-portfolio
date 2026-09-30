@@ -2,13 +2,6 @@ import React from 'react';
 import './about.scss';
 
 import Abinav from '../../assets/me/webp/Abinav.webp'; // Import your image
-import tjklint2 from '../../assets/me/webp/tjklint2.webp';
-import tjklint3 from '../../assets/me/webp/tjklint3.webp';
-import tjklint4 from '../../assets/me/webp/tjklint4.webp';
-import tjklint5 from '../../assets/me/webp/tjklint5.webp';
-import tjklint6 from '../../assets/me/webp/tjklint6.webp';
-import tjklint7 from '../../assets/me/webp/tjklint7.webp';
-import tjklint8 from '../../assets/me/webp/tjklint8.webp';
 
 const About: React.FC = () => {
   return (
@@ -17,28 +10,32 @@ const About: React.FC = () => {
         <div className="about-text">
           <h2 className="about-title">About Me</h2>
           <p>
-            Hello! My name is <span className="purple-text">Abinav Binukumar </span>
-            I'm a passionate software engineering student with a love brainstorming new ideas!
+            Hello! My name is <span className="purple-text">Abinav Binukumar</span>, a
+            software engineer finishing my final year at <span className="purple-text">Ontario Tech University</span>
+            {' '}(<span className="purple-text">3.99/4.3 CGPA</span>), graduating <span className="purple-text">May 2027</span>.
+            I'm happiest when a system that used to be held together with duct tape isn't anymore.
           </p>
           <p>
-            I'm currently studying at<span className="purple-text"> Ontario Tech University </span>
-            in my <span className="purple-text">Third year</span> Woohoo!
+            Most recently, I've been rebuilding <span className="purple-text">ElLemuel</span>'s entire web platform
+            from a no-code Wix site into a fully self-hosted, full-stack platform - donation system, disaster recovery
+            on AKS, the works - after a work term at <span className="purple-text">RBC</span> building multi-cloud
+            Kubernetes automation that cut roughly <span className="purple-text">80%</span> of the manual workload off
+            a 1,000+ repo GitHub migration and is projected to save over <span className="purple-text">$1M</span> in
+            infrastructure costs.
           </p>
           <p>
-            I have learned and worked on projects in a few different fields. I worked on <span className="purple-text"> Mobile App Dev</span> and <span className="purple-text"> Web Dev </span>
-            projects mostly. During these projects, I have developed a strong interest in <span className="purple-text"> Product Engineering</span> and that is what I am focused on.
+            Along the way I've picked up <span className="purple-text">Java, C++, Python, and the MERN stack</span> for
+            product work, and <span className="purple-text">Kubernetes, Docker, GitOps, and CI/CD</span> for
+            infrastructure. I like tools that get out of the way so the product ships faster.
           </p>
           <p>
-            And also to broaden my horizon, I have been learning and working on projects using <span className="purple-text">Bash scripting </span> and <span className="purple-text">Automation</span>.
+            Right now I'm building <span className="purple-text">AvidReader</span>, an AI-assisted reading dashboard,
+            as my capstone, and co-founding <span className="purple-text">niya</span>, an AI-assisted hospital
+            management platform for patients and staff alike.
           </p>
           <p>
-            My skillset is quite wide-ranged. I like to choose
-            the best tools to get the best product as fast as possible. I'm a quick learner, especially in fast-paced environments
-            where I'm able to hone skills on the fly to improve and deliver on time.
-          </p>
-          <p>
-            Outside of tech, you'll typically find me travelling, golfing, listening/discovering some live music, using the Oxford comma,
-            and travelling!
+            Outside of tech, you'll typically find me watching movies, exploring new towns, driving, and experimenting
+            with new hobbies.
           </p>
         </div>
         <div className="about-photo">
