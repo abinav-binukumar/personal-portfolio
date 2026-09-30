@@ -11,17 +11,11 @@ const About: React.FC = () => {
           <h2 className="about-title">About Me</h2>
           <p>
             Hello! My name is <span className="purple-text">Abinav Binukumar</span>, a
-            software engineer finishing my final year at <span className="purple-text">Ontario Tech University</span>
-            {' '}(<span className="purple-text">3.99/4.3 CGPA</span>), graduating <span className="purple-text">May 2027</span>.
-            I'm happiest when a system that used to be held together with duct tape isn't anymore.
-          </p>
-          <p>
-            Most recently, I've been rebuilding <span className="purple-text">ElLemuel</span>'s entire web platform
-            from a no-code Wix site into a fully self-hosted, full-stack platform - donation system, disaster recovery
-            on AKS, the works - after a work term at <span className="purple-text">RBC</span> building multi-cloud
-            Kubernetes automation that cut roughly <span className="purple-text">80%</span> of the manual workload off
-            a 1,000+ repo GitHub migration and is projected to save over <span className="purple-text">$1M</span> in
-            infrastructure costs.
+            software engineer finishing my final year at <span className="purple-text">Ontario Tech University</span>,
+            graduating <span className="purple-text">May 2027</span>. I'm happiest when a system that used to be held
+            together with duct tape isn't anymore - I like taking something fragile and manual and turning it into
+            something people can actually rely on, whether that's a scrappy startup's whole platform or a piece of
+            enterprise infrastructure nobody wants to touch.
           </p>
           <p>
             Along the way I've picked up <span className="purple-text">Java, C++, Python, and the MERN stack</span> for
