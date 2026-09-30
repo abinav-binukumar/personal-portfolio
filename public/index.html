@@ -15,6 +15,29 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Open Graph / Twitter Card - without these, link previews (Discord,
+         Slack, iMessage, X, ...) fall back to guessing an image, which used
+         to land on the favicon: a transparent-background icon designed for a
+         dark page chrome, not a white preview card. og-image.png is a
+         dedicated 1200x630 card with a solid background instead. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abinav-binukumar.co/" />
+    <meta property="og:title" content="Abinav Binukumar - Portfolio" />
+    <meta
+      property="og:description"
+      content="Come check out my custom portfolio site that showcases me, my skills, and my projects!"
+    />
+    <meta property="og:image" content="https://abinav-binukumar.co/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Abinav Binukumar - Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Come check out my custom portfolio site that showcases me, my skills, and my projects!"
+    />
+    <meta name="twitter:image" content="https://abinav-binukumar.co/og-image.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
